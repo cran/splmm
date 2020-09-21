@@ -16,7 +16,7 @@ Robert E Weiss.Modeling longitudinal data.  Springer Science & Business Media, 2
    \item{schoolid}{School id 1-12.}
    \item{treatment}{Calorie, meat, milk, control}
    \item{rn}{round. }
-   \item{relyear}{Time in years from baseline.}
+   \item{year}{Time in years from baseline.}
    \item{revans}{Raven's colored matrices score.}
    \item{arithmetic}{Arithmetic score.}
    \item{vmeaning}{Verbal meaning.}
@@ -26,10 +26,10 @@ Robert E Weiss.Modeling longitudinal data.  Springer Science & Business Media, 2
    \item{height}{height at baseline. }
    \item{weight}{weight at baseline. }
    \item{head_circ}{Head circumference at baseline. }
-   \item{ses1}{Socio-Economic Status score. }
-   \item{readtest}{Mother's reading test. }
-   \item{writetest}{Mother's writing test. }
-   \item{yrsofsch}{Mother's years of educations. }
+   \item{ses}{Socio-Economic Status score. }
+   \item{mom_read}{Mother's reading test. }
+   \item{mom_write}{Mother's writing test. }
+   \item{mom_edu}{Mother's years of educations. }
    \item{morbscore}{Morbidity score: none/mild/severe. }
    \item{complete}{Logical variable specifying whether the subject has all five rounds. 1-Yes, 0-No. }
    \item{rnone}{Logical variable specifying whether the observation is the baseline. 1-round one (baseline), 0-not round one. }

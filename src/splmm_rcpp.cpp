@@ -278,8 +278,8 @@ Rcpp::List ArmijoRule_L(Rcpp::List xGroup, Rcpp::List yGroup, Rcpp::List zGroup,
     }
   }
   
-  double fct = ObjFunction_L(xGroup=xGroup, yGroup=yGroup, zGroup=zGroup, zIdGrp=zIdGrp,
-                             b=b, L=L, nonpen=nonpen, sigma=sigma, lambda=lambda, penalty=penalty, ll1=ll1);
+  double fct = ObjFunction_L(xGroup, yGroup, zGroup, zIdGrp,
+                             b, L, nonpen, sigma, lambda, penalty, ll1);
   
   
   
@@ -297,15 +297,15 @@ Rcpp::List ArmijoRule_L(Rcpp::List xGroup, Rcpp::List yGroup, Rcpp::List zGroup,
     }
     
     
-    double fctOld = ObjFunction_L(xGroup=xGroup, yGroup=yGroup, zGroup=zGroup, zIdGrp=zIdGrp,
-                                  b=b, L=L, nonpen=nonpen, sigma=sigma, lambda=lambda, penalty=penalty, ll1=ll1);
+    double fctOld = ObjFunction_L(xGroup, yGroup, zGroup, zIdGrp,
+                                  b, L, nonpen, sigma, lambda, penalty, ll1);
     
     for(int j=0; j<=maxArmijo; j++){
       
       L_new(l,k) = Llk + a_init*pow(delta,j)*dk;
       
-      double fctNew = ObjFunction_L(xGroup=xGroup, yGroup=yGroup, zGroup=zGroup, zIdGrp=zIdGrp,
-                                    b=b, L=L_new, nonpen=nonpen, sigma=sigma, lambda=lambda, penalty=penalty, ll1=ll1);
+      double fctNew = ObjFunction_L(xGroup, yGroup, zGroup, zIdGrp,
+                                    b, L_new, nonpen, sigma, lambda, penalty, ll1);
       
       double addDelta = a_init*pow(delta,j)*rho*deltak;
       

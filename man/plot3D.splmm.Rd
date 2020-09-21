@@ -23,9 +23,10 @@
 \donttest{
 data(cognitive)
 
-x <- model.matrix(ravens ~ schoolid+treatment+relyear+sex+age_at_time0+height
-+weight+head_circ+ses1+readtest+writetest+yrsofsch, cognitive)
-z <- model.matrix(ravens ~ schoolid+treatment+relyear, cognitive)
+x <- model.matrix(ravens ~schoolid+treatment+year+sex+age_at_time0
+                  +height+weight+head_circ+ses+mom_read+mom_write
+                  +mom_edu, cognitive)
+z <- x
 
 ## Tuning over lambda1 grid and lambda2 grid
 lam1 = seq(0.01,0.05,0.01)
