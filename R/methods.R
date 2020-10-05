@@ -9,8 +9,8 @@ summary.splmm <- function(object,...)
       } else {
         
     # 1. part
-    table1 <- round(c(object$aic,object$bic,object$logLik,object$deviance,object$objective),1)
-    names(table1) <- c("AIC","BIC","logLik","deviance","objective")
+    table1 <- round(c(object$aic,object$bic,object$bbic,object$ebic,object$logLik,object$deviance,object$objective),1)
+    names(table1) <- c("AIC","BIC","BBIC","EBIC","logLik","deviance","objective")
     cat("Model fitted by",object$method,"for","lambda1 =",round(object$lambda1,3),",lambda2 =",round(object$lambda2,3),":\n")
     print(table1)
     
@@ -99,13 +99,16 @@ plot.splmm <- function(x,...){
   if(class(x)!="splmm.tuning") stop("input is not splmm.tuning object.")
   
   if(x$lam1.tuning&!x$lam2.tuning){
-    BIC = cbind.data.frame(x$lam1.seq,rep("BIC",length(x$BIC)),x$BIC)
+    BIC = cbind.data.frame(x$lam1.seq,rep("BIC",length(x$BIC.lam1)),x$BIC.lam1)
     names(BIC) = c("lambda1","Criteria","Value")
-    AIC = cbind.data.frame(x$lam1.seq,rep("AIC",length(x$AIC)),x$AIC)
+    AIC = cbind.data.frame(x$lam1.seq,rep("AIC",length(x$AIC.lam1)),x$AIC.lam1)
     names(AIC) = c("lambda1","Criteria","Value")
-    plot.df = rbind.data.frame(BIC,AIC)
+    BBIC = cbind.data.frame(x$lam1.seq,rep("BBIC",length(x$BBIC.lam1)),x$BBIC.lam1)
+    names(BBIC) = c("lambda1","Criteria","Value")
+    EBIC = cbind.data.frame(x$lam1.seq,rep("EIC",length(x$EBIC.lam1)),x$EBIC.lam1)
+    names(EBIC) = c("lambda1","Criteria","Value")
+    plot.df = rbind.data.frame(BIC,AIC,BBIC,EBIC)
     plot.df$Value = round(plot.df$Value,2)
-    
     
     ggplot(plot.df, aes(x = lambda1, y = Value, group = Criteria)) +
       geom_line(aes(linetype = Criteria, color = Criteria))+
@@ -114,11 +117,15 @@ plot.splmm <- function(x,...){
     
   }else if(!x$lam1.tuning&x$lam2.tuning){
     
-    BIC = cbind.data.frame(x$lam2.seq,rep("BIC",length(x$BIC)),x$BIC)
+    BIC = cbind.data.frame(x$lam2.seq,rep("BIC",length(x$BIC.lam2)),x$BIC.lam2)
     names(BIC) = c("lambda2","Criteria","Value")
-    AIC = cbind.data.frame(x$lam2.seq,rep("AIC",length(x$AIC)),x$AIC)
+    AIC = cbind.data.frame(x$lam2.seq,rep("AIC",length(x$AIC.lam2)),x$AIC.lam2)
     names(AIC) = c("lambda2","Criteria","Value")
-    plot.df = rbind.data.frame(BIC,AIC)
+    BBIC = cbind.data.frame(x$lam2.seq,rep("BBIC",length(x$BBIC.lam2)),x$BBIC.lam2)
+    names(BBIC) = c("lambda1","Criteria","Value")
+    EBIC = cbind.data.frame(x$lam2.seq,rep("EIC",length(x$EBIC.lam2)),x$EBIC.lam2)
+    names(EBIC) = c("lambda1","Criteria","Value")
+    plot.df = rbind.data.frame(BIC,AIC,BBIC,EBIC)
     plot.df$Value = round(plot.df$Value,2)
     
     
@@ -132,14 +139,22 @@ plot.splmm <- function(x,...){
     names(BIC1) = c("lambda1","Criteria","Value")
     AIC1 = cbind.data.frame(x$lam1.seq,rep("AIC",length(x$AIC.lam1)),x$AIC.lam1)
     names(AIC1) = c("lambda1","Criteria","Value")
-    plot.df1 = rbind.data.frame(BIC1,AIC1)
+    BBIC1 = cbind.data.frame(x$lam1.seq,rep("BBIC",length(x$BBIC.lam1)),x$BBIC.lam1)
+    names(BBIC1) = c("lambda1","Criteria","Value")
+    EBIC1 = cbind.data.frame(x$lam1.seq,rep("EBIC",length(x$EBIC.lam1)),x$EBIC.lam1)
+    names(EBIC1) = c("lambda1","Criteria","Value")
+    plot.df1 = rbind.data.frame(BIC1,AIC1,BBIC1,EBIC1)
     plot.df1$Value = round(plot.df1$Value,2)
     
     BIC2 = cbind.data.frame(x$lam2.seq,rep("BIC",length(x$BIC.lam2)),x$BIC.lam2)
     names(BIC2) = c("lambda2","Criteria","Value")
     AIC2 = cbind.data.frame(x$lam2.seq,rep("AIC",length(x$AIC.lam2)),x$AIC.lam2)
     names(AIC2) = c("lambda2","Criteria","Value")
-    plot.df2 = rbind.data.frame(BIC2,AIC2)
+    BBIC2 = cbind.data.frame(x$lam2.seq,rep("BBIC",length(x$BBIC.lam2)),x$BBIC.lam2)
+    names(BBIC2) = c("lambda2","Criteria","Value")
+    EBIC2 = cbind.data.frame(x$lam2.seq,rep("EBIC",length(x$EBIC.lam2)),x$EBIC.lam2)
+    names(EBIC2) = c("lambda2","Criteria","Value")
+    plot.df2 = rbind.data.frame(BIC2,AIC2,BBIC2,EBIC2)
     plot.df2$Value = round(plot.df2$Value,2)
     
     
@@ -161,27 +176,72 @@ plot.splmm <- function(x,...){
   
 }
 
-plot3D.splmm <- function(x,criteria=c("BIC","AIC"),...){
+plot3D.splmm <- function(x,criteria=c("BIC","AIC","BBIC","EBIC"),type=c("line","surface"),...){
   # check if the object is splmm.tuning
   if(class(x)!="splmm.tuning") stop("input is not splmm.tuning object.")
   if(!x$lam1.tuning|!x$lam2.tuning) stop("input needs to be splmm.tuning object for both lam1 and lam2.")
   
   criteria <- match.arg(criteria)
+  type <- match.arg(type)
   
-  if(criteria=="BIC"){
-    BIC.df = cbind.data.frame(expand.grid(x$lam1.seq,x$lam2.seq),as.vector(x$fit.BIC))
-    names(BIC.df) = c("lambda 1","lambda 2","Value")
+  if(type=="line"){
+    if(criteria=="BIC"){
+      BIC.df = cbind.data.frame(expand.grid(x$lam1.seq,x$lam2.seq),as.vector(x$fit.BIC))
+      names(BIC.df) = c("lambda 1","lambda 2","Value")
+      
+      scatter3D(x=BIC.df$`lambda 1`, y=BIC.df$`lambda 2`, z=BIC.df$Value, phi = 0, bty = "g",  type = "h", 
+                ticktype = "detailed", pch = 19, cex = 0.5, xlab="lambda 1",ylab="lambda 2",zlab="",main="BIC value")
+    }else if(criteria=="AIC"){
+      AIC.df = cbind.data.frame(expand.grid(x$lam1.seq,x$lam2.seq),as.vector(x$fit.AIC))
+      names(AIC.df) = c("lambda 1","lambda 2","Value")
+      
+      scatter3D(x=AIC.df$`lambda 1`, y=AIC.df$`lambda 2`, z=AIC.df$Value, phi = 0, bty = "g",  type = "h", 
+                ticktype = "detailed", pch = 19, cex = 0.5, xlab="lambda 1",ylab="lambda 2",zlab="",main="AIC value")
+      
+    }else if(criteria=="BBIC"){
+      BBIC.df = cbind.data.frame(expand.grid(x$lam1.seq,x$lam2.seq),as.vector(x$fit.BBIC))
+      names(BBIC.df) = c("lambda 1","lambda 2","Value")
+      
+      scatter3D(x=BBIC.df$`lambda 1`, y=BBIC.df$`lambda 2`, z=BBIC.df$Value, phi = 0, bty = "g",  type = "h", 
+                ticktype = "detailed", pch = 19, cex = 0.5, xlab="lambda 1",ylab="lambda 2",zlab="",main="BBIC value")
+    }else if(criteria=="EBIC"){
+      EBIC.df = cbind.data.frame(expand.grid(x$lam1.seq,x$lam2.seq),as.vector(x$fit.EBIC))
+      names(EBIC.df) = c("lambda 1","lambda 2","Value")
+      
+      scatter3D(x=EBIC.df$`lambda 1`, y=EBIC.df$`lambda 2`, z=EBIC.df$Value, phi = 0, bty = "g",  type = "h", 
+                ticktype = "detailed", pch = 19, cex = 0.5, xlab="lambda 1",ylab="lambda 2",zlab="",main="EBIC value")
+    }
     
-    scatter3D(x=BIC.df$`lambda 1`, y=BIC.df$`lambda 2`, z=BIC.df$Value, phi = 0, bty = "g",  type = "h", 
-                   ticktype = "detailed", pch = 19, cex = 0.5, xlab="lambda 1",ylab="lambda 2",zlab="",main="BIC value")
-  }else if(criteria=="AIC"){
-    AIC.df = cbind.data.frame(expand.grid(x$lam1.seq,x$lam2.seq),as.vector(x$fit.AIC))
-    names(AIC.df) = c("lambda 1","lambda 2","Value")
-    
-    scatter3D(x=AIC.df$`lambda 1`, y=AIC.df$`lambda 2`, z=AIC.df$Value, phi = 0, bty = "g",  type = "h", 
-                   ticktype = "detailed", pch = 19, cex = 0.5, xlab="lambda 1",ylab="lambda 2",zlab="",main="AIC value")
+  }else if(type=="surface"){
+    if(criteria=="BIC"){
+      persp3D(x = x$lam1.seq, y = x$lam2.seq, 
+              z = x$fit.BIC, phi = 0, bty = "g", type = "h", 
+              ticktype = "detailed", pch = 19, cex = 0.5, 
+              xlab = "lambda 1", ylab = "lambda 2", 
+              zlab = "", main = "BIC value")
+    }else if(criteria=="AIC"){
+      persp3D(x = x$lam1.seq, y = x$lam2.seq, 
+              z = x$fit.AIC, phi = 0, bty = "g", type = "h", 
+              ticktype = "detailed", pch = 19, cex = 0.5, 
+              xlab = "lambda 1", ylab = "lambda 2", 
+              zlab = "", main = "AIC value")
+      
+    }else if(criteria=="BBIC"){
+      persp3D(x = x$lam1.seq, y = x$lam2.seq, 
+              z = x$fit.BBIC, phi = 0, bty = "g", type = "h", 
+              ticktype = "detailed", pch = 19, cex = 0.5, 
+              xlab = "lambda 1", ylab = "lambda 2", 
+              zlab = "", main = "BBIC value")
+    }else if(criteria=="EBIC"){
+      persp3D(x = x$lam1.seq, y = x$lam2.seq, 
+              z = x$fit.EBIC, phi = 0, bty = "g", type = "h", 
+              ticktype = "detailed", pch = 19, cex = 0.5, 
+              xlab = "lambda 1", ylab = "lambda 2", 
+              zlab = "", main = "EBIC value")
+    }
     
   }
+  
   
 }
 #plot.splmm <- function(x,...) {

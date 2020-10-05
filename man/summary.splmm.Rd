@@ -20,7 +20,7 @@ x <- model.matrix(ravens ~ schoolid+treatment+relyear+sex+age_at_time0+height+we
 +head_circ+ses1+readtest+writetest+yrsofsch, cognitive)
 z <- model.matrix(ravens ~ schoolid+treatment+relyear, cognitive)
 
-fit <- splmm(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=0.01,lam2=0.01,
+fit <- splmm(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=0.1,lam2=0.1,
 penalty.b="scad", penalty.L="scad")
 summary(fit)
 }

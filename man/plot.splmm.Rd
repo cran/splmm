@@ -28,7 +28,7 @@ x <- model.matrix(ravens ~schoolid+treatment+year+sex+age_at_time0
 z <- x
 
 ## Tuning over lambda1 grid
-lam1 = seq(0.01,0.05,0.01)
+lam1 = seq(0.1,0.5,0.1)
 lam2 = 0.1
 fit1 <-splmmTuning(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=lam1,
 lam2=lam2,penalty.b="scad", penalty.L="scad")

@@ -375,6 +375,11 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   aic <- -2* logLik + 2*npar
   bic <- -2* logLik + log(ntot)*npar
   
+  p <- sum(betaIter!=0)
+  q <- sum(diag(D)!=0)
+  bbic <- -2*logLik + max(1,log(log(p+q)))*log(ntot)*npar
+  ebic <- -2*logLik + (log(ntot)+2*log(p+q))*npar
+  
   #if (any(LvecIter==0)) cat("Redundant covariance parameters.","\n")
   
   if (converged>0) cat("Algorithm does not properly converge.","\n")
@@ -385,7 +390,7 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
               nonpen.b=nonpen.b,nonpen.L=nonpen.L,lambda1=lambda1,lambda2=lambda2,sigma=abs(sigmaIter),Lvec=LvecIter,coefficients=betaIter,D=D,random=bi,u=u,
               ranef=ranef,fixef=fixef,fitted.values=fitted,
               residuals=residuals,converged=converged,logLik=logLik,npar=npar,deviance=deviance,
-              aic=aic,bic=bic,counter=counter,CovOpt=CovOpt,control=control,call=match.call(),
+              aic=aic,bic=bic,bbic=bbic,ebic=ebic,counter=counter,CovOpt=CovOpt,control=control,call=match.call(),
               stopped=stopped,objective=fctIter)
   
   out

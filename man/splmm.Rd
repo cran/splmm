@@ -22,7 +22,7 @@ splmm(x, y, z, grp, lam1, lam2, nonpen.b=1,nonpen.L=1,penalty.b=c("lasso","scad"
   \item{nonpen.L}{Index of indices of random effects not penalized. The default value is 1, which means the random intercept is not penalized}
   \item{penalty.b}{The penalty method for fixed effects penalization. Currently available options include LASSO penalty and SCAD penalty. }
   \item{penalty.L}{The penalty method for fixed effects penalization. Currently available options include LASSO penalty and SCAD penalty. }
-  \item{CovOpt}{which optimization routine should be used for updating the variance parameter. The available options include optimize and nlminb. nlminb uses the estimate                     of the last iteration as a starting value. nlminb is faster if there are many Gauss-Seidel iterations.}
+  \item{CovOpt}{which optimization routine should be used for updating the variance parameter. The available options include optimize and nlminb. nlminb uses the estimate of the last iteration as a starting value. nlminb is faster if there are many Gauss-Seidel iterations.}
   \item{standardize}{A logical parameter specifying whether the fixed effects matrix x and random effects matrix z should  be standardized such that each column has mean 0 and standard deviation 1. The default value is \code{TRUE}}
   \item{control}{control parameters for the algorithm and the Armijo Rule, see \code{'splmmControl'} for the details}
 }
@@ -64,6 +64,8 @@ All the details of the algorithm can be found in the manuscript.
   of the set of nonzero \code{coefficients} plus the number of nonzero variance in \code{D}}
   \item{aic}{AIC}
   \item{bic}{BIC}
+  \item{bbic}{Modified BIC defined by Wang et al (2009)}
+  \item{ebic}{Extended BIC defined by Chen and Chen (2008)}
   \item{converged}{Does the algorithm converge? 0: correct convergence ;
   an odd number means that maxIter was reached ; an even number means
   that the Armijo step was not succesful. For each unsuccessfull Armijo
@@ -92,8 +94,8 @@ x <- model.matrix(ravens ~schoolid+treatment+year+sex+age_at_time0
                   +mom_edu, cognitive)
 z <- x
 
-fit <- splmm(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=0.01,
-lam2=0.01,penalty.b="lasso", penalty.L="lasso")
+fit <- splmm(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=0.1,
+lam2=0.1,penalty.b="lasso", penalty.L="lasso")
 summary(fit)
 }
 

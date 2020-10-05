@@ -41,8 +41,16 @@ The function takes a scalar or a grid of lambda1 and/or lambda2 and determine th
   \item{AIC.lam1}{A vector of AIC values of splmm models fitting over a lambda1 grid.}
   \item{AIC.lam2}{A vector of AIC values of splmm models fitting over a lambda2 grid.}
   \item{fit.AIC}{An array of AIC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
+  \item{BBIC.lam1}{A vector of BBIC values of splmm models fitting over a lambda1 grid.}
+  \item{BBIC.lam2}{A vector of BBIC values of splmm models fitting over a lambda2 grid.}
+  \item{fit.BBIC}{An array of BBIC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
+  \item{EBIC.lam1}{A vector of EBIC values of splmm models fitting over a lambda1 grid.}
+  \item{EBIC.lam2}{A vector of EBIC values of splmm models fitting over a lambda2 grid.}
+  \item{fit.EBIC}{An array of EBIC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
   \item{min.BIC}{The minimum BIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{min.AIC}{The minimum AIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
+  \item{min.BBIC}{The minimum BBIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
+  \item{min.EBIC}{The minimum EBIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{best.model}{The index of the optimal model. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{best.fit}{The optimal model chosen by the minimum BIC as an \code{splmm} object. }
   \item{min.lam1}{lambda1 value that results in the optimal model. This is only available when input lambda1 is a vector.}
@@ -62,7 +70,7 @@ x <- model.matrix(ravens ~schoolid+treatment+year+sex+age_at_time0
 z <- x
 
 ## Tuning over lambda1 grid
-lam1 = seq(0.01,0.05,0.01)
+lam1 = seq(0.1,0.5,0.1)
 lam2 = 0.1
 fit1 <-splmmTuning(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1.seq=lam1,
 lam2.seq=lam2,penalty.b="scad", penalty.L="scad")
@@ -70,14 +78,14 @@ plot.splmm(fit1)
 
 ## Tuning over lambda2 grid
 lam1 = 0.1
-lam2 = seq(0.01,0.05,0.01)
+lam2 = seq(0.1,0.5,0.1)
 fit2 <-splmmTuning(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1.seq=lam1,
 lam2.seq=lam2,penalty.b="scad", penalty.L="scad")
 plot.splmm(fit2)
 
 ## Tuning over both lambda1 and lambda2 grid
-lam1 = seq(0.01,0.05,0.02)
-lam2 = seq(0.01,0.05,0.02)
+lam1 = seq(0.1,0.5,0.2)
+lam2 = seq(0.1,0.5,0.2)
 fit3 <-splmmTuning(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1.seq=lam1,
 lam2.seq=lam2,penalty.b="scad", penalty.L="scad")
 plot.splmm(fit3)

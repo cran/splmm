@@ -1,7 +1,7 @@
 Package: splmm
 Type: Package
 Title: Simultaneous Penalized Linear Mixed Effects Models
-Version: 1.1
+Version: 1.1.1
 Date: 2020-09-21
 Author: Luoying Yang, Tong Tong Wu
 Maintainer: Luoying Yang <lyang19@u.rochester.edu>
@@ -14,7 +14,7 @@ Imports: Rcpp (>= 1.0.1), emulator, miscTools, penalized, ggplot2,
         gridExtra, plot3D, MASS
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
-Packaged: 2020-09-21 18:29:41 UTC; lyang19
+Packaged: 2020-10-05 15:11:07 UTC; lyang19
 Depends: R (>= 3.5.0)
 Repository: CRAN
-Date/Publication: 2020-09-21 21:20:02 UTC
+Date/Publication: 2020-10-05 20:10:02 UTC
