@@ -1,4 +1,4 @@
-676237f5962bcf7eb97cd431519fd199 *DESCRIPTION
+3f6daa71146c246e21ae2ec06533104f *DESCRIPTION
 c56017d40b56e8fdf789dd8c49e9df23 *NAMESPACE
 601993d50d897760420c840e603c38de *R/RcppExports.R
 6fe49f1aceaa31ecf2c1a0936a1953fd *R/helpers.R
@@ -6,7 +6,7 @@ c56017d40b56e8fdf789dd8c49e9df23 *NAMESPACE
 dfa81d497bfdedeb27419bb665062615 *R/splmm.R
 bf4ca61b8864e4e8ec2686658f0c6b24 *R/splmmControl.R
 5cdb551e3597682c75282dbc894c6f84 *R/splmmTuning.R
-b666083c97d415b8e82c7a7e9aa79631 *build/partial.rdb
+972003b8031b2afeececd3ad9288c0a0 *build/partial.rdb
 8cab65cb4b08af0310de6f3dd7d5ab7a *data/cognitive.rda
 0410f50205fe5bd758d0ee5a0d30dcf5 *man/cognitive.Rd
 0449d044b55c82ae2e5f3bf2156e52da *man/plot.splmm.Rd
