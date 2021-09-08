@@ -59,7 +59,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     fit.list = list()
     BIC.vec = vector()
     AIC.vec = vector()
-    BBIC.vec = vector()
+    BICC.vec = vector()
     EBIC.vec = vector()
     lam1.tuning = TRUE
     lam2.tuning = FALSE
@@ -70,7 +70,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
       fit.list[[i]] = fit
       BIC.vec[i] = fit$bic
       AIC.vec[i] = fit$aic
-      BBIC.vec[i] = fit$bbic
+      BICC.vec[i] = fit$bicc
       EBIC.vec[i] = fit$ebic
       
     }
@@ -78,7 +78,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     
     min.BIC = min(BIC.vec)
     min.AIC = min(AIC.vec)
-    min.BBIC = min(BBIC.vec)
+    min.BICC = min(BICC.vec)
     min.EBIC = min(EBIC.vec)
     
     best.model = which.min(BIC.vec)
@@ -87,8 +87,8 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     best.fit = fit.list[[which.min(BIC.vec)]]
     
     out = list(lam1.seq=lam1.seq,
-               BIC.lam1=BIC.vec,AIC.lam1=AIC.vec,BBIC.lam1=BBIC.vec,EBIC.lam1=EBIC.vec,
-               min.BIC=min.BIC,min.AIC=min.AIC,min.BBIC=min.BBIC,min.EBIC=min.EBIC,
+               BIC.lam1=BIC.vec,AIC.lam1=AIC.vec,BICC.lam1=BICC.vec,EBIC.lam1=EBIC.vec,
+               min.BIC=min.BIC,min.AIC=min.AIC,min.BICC=min.BICC,min.EBIC=min.EBIC,
                best.model=best.model,best.fit=best.fit,min.lam1=best.lam1,lam1.tuning=lam1.tuning,lam2.tuning=lam2.tuning)
     
     out
@@ -98,7 +98,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     fit.list = list()
     BIC.vec = vector()
     AIC.vec = vector()
-    BBIC.vec = vector()
+    BICC.vec = vector()
     EBIC.vec = vector()
     lam1.tuning = FALSE
     lam2.tuning = TRUE
@@ -109,7 +109,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
       fit.list[[i]] = fit
       BIC.vec[i] = fit$bic
       AIC.vec[i] = fit$aic
-      BBIC.vec[i] = fit$bbic
+      BICC.vec[i] = fit$bicc
       EBIC.vec[i] = fit$ebic
       
     }
@@ -117,7 +117,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     
     min.BIC = min(BIC.vec)
     min.AIC = min(AIC.vec)
-    min.BBIC = min(BBIC.vec)
+    min.BICC = min(BICC.vec)
     min.EBIC = min(EBIC.vec)
     
     best.model = which.min(BIC.vec)
@@ -126,8 +126,8 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     best.fit = fit.list[[which.min(BIC.vec)]]
     
     out = list(lam2.seq=lam2.seq,
-               BIC.lam2=BIC.vec,AIC.lam2=AIC.vec,BBIC.lam2=BBIC.vec,EBIC.lam2=EBIC.vec,
-               min.BIC=min.BIC,min.AIC=min.AIC,min.BBIC=min.BBIC,min.EBIC=min.EBIC,
+               BIC.lam2=BIC.vec,AIC.lam2=AIC.vec,BICC.lam2=BICC.vec,EBIC.lam2=EBIC.vec,
+               min.BIC=min.BIC,min.AIC=min.AIC,min.BICC=min.BICC,min.EBIC=min.EBIC,
                best.model=best.model,best.fit=best.fit,min.lam2=best.lam2,lam1.tuning=lam1.tuning,lam2.tuning=lam2.tuning)
     
     out
@@ -138,7 +138,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     fit.list = list()
     BIC.vec = vector()
     AIC.vec = vector()
-    BBIC.vec = vector()
+    BICC.vec = vector()
     EBIC.vec = vector()
     
     lam1.tuning = TRUE
@@ -146,7 +146,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     
     fit.BIC = matrix(nrow = length(lam1.seq), ncol = length(lam2.seq))
     fit.AIC = matrix(nrow = length(lam1.seq), ncol = length(lam2.seq))
-    fit.BBIC = matrix(nrow = length(lam1.seq), ncol = length(lam2.seq))
+    fit.BICC = matrix(nrow = length(lam1.seq), ncol = length(lam2.seq))
     fit.EBIC = matrix(nrow = length(lam1.seq), ncol = length(lam2.seq))
     
     for (i in 1:length(lam1.seq)) {
@@ -156,7 +156,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
                       standardize=standardize,control=control)
           fit.BIC[i,j] = fit$bic
           fit.AIC[i,j] = fit$aic
-          fit.BBIC[i,j] = fit$bbic
+          fit.BICC[i,j] = fit$bicc
           fit.EBIC[i,j] = fit$ebic},error=function(e){})
         
       }
@@ -173,9 +173,9 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     AIC.lam2 = fit.AIC[min.aic[1],]
     AIC.lam1 = fit.AIC[,min.aic[2]]
     
-    min.bbic = which(fit.BBIC==min(fit.BBIC,na.rm = TRUE), arr.ind = TRUE)
-    BBIC.lam2 = fit.BBIC[min.bbic[1],]
-    BBIC.lam1 = fit.BBIC[,min.bbic[2]]
+    min.bicc = which(fit.BICC==min(fit.BICC,na.rm = TRUE), arr.ind = TRUE)
+    BICC.lam2 = fit.BICC[min.bicc[1],]
+    BICC.lam1 = fit.BICC[,min.bicc[2]]
     
     min.ebic = which(fit.EBIC==min(fit.EBIC,na.rm = TRUE), arr.ind = TRUE)
     EBIC.lam2 = fit.EBIC[min.ebic[1],]
@@ -187,7 +187,7 @@ splmmTuning <- function(x,y,z,grp,lam1.seq,lam2.seq,nonpen.b=1,nonpen.L=1,penalt
     out = list(lam1.seq=lam1.seq,lam2.seq=lam2.seq,
                BIC.lam1=BIC.lam1,BIC.lam2=BIC.lam2,fit.BIC=fit.BIC,
                AIC.lam1=AIC.lam1,AIC.lam2=AIC.lam2,fit.AIC=fit.AIC,
-               BBIC.lam1=BBIC.lam1,BBIC.lam2=BBIC.lam2,fit.BBIC=fit.BBIC,
+               BICC.lam1=BICC.lam1,BICC.lam2=BICC.lam2,fit.BICC=fit.BICC,
                EBIC.lam1=EBIC.lam1,EBIC.lam2=EBIC.lam2,fit.EBIC=fit.EBIC,
                best.fit=best.fit,min.lam1=lam1,min.lam2=lam2,lam1.tuning=lam1.tuning,lam2.tuning=lam2.tuning)
     out

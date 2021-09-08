@@ -12,13 +12,22 @@
   \item{\dots}{not used}
 }
 
-
+\value{
+No return value, a print-out of a \code{'splmm'} object's short summary is produced. 
+}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{print.splmm}
 }
 \examples{
+data(simulated_data)
+
+set.seed(144)
+fit = splmm(x=simulated_data$x,y=simulated_data$y,
+z=simulated_data$z,grp=simulated_data$grp,
+lam1=0.1,lam2=0.01, penalty.b="scad", penalty.L="scad")
+print(fit)
 
 \donttest{
 data(cognitive)

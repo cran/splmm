@@ -41,15 +41,15 @@ The function takes a scalar or a grid of lambda1 and/or lambda2 and determine th
   \item{AIC.lam1}{A vector of AIC values of splmm models fitting over a lambda1 grid.}
   \item{AIC.lam2}{A vector of AIC values of splmm models fitting over a lambda2 grid.}
   \item{fit.AIC}{An array of AIC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
-  \item{BBIC.lam1}{A vector of BBIC values of splmm models fitting over a lambda1 grid.}
-  \item{BBIC.lam2}{A vector of BBIC values of splmm models fitting over a lambda2 grid.}
-  \item{fit.BBIC}{An array of BBIC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
+  \item{BICC.lam1}{A vector of BICC values of splmm models fitting over a lambda1 grid.}
+  \item{BICC.lam2}{A vector of BICC values of splmm models fitting over a lambda2 grid.}
+  \item{fit.BICC}{An array of BICC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
   \item{EBIC.lam1}{A vector of EBIC values of splmm models fitting over a lambda1 grid.}
   \item{EBIC.lam2}{A vector of EBIC values of splmm models fitting over a lambda2 grid.}
   \item{fit.EBIC}{An array of EBIC values of splmm models fitting over lambda 1 grid x lambda2 grid.}
   \item{min.BIC}{The minimum BIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{min.AIC}{The minimum AIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
-  \item{min.BBIC}{The minimum BBIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
+  \item{min.BICC}{The minimum BICC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{min.EBIC}{The minimum EBIC value from tuning over a grid. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{best.model}{The index of the optimal model. This is only available when either lambda1 or lambda2 is a scalar. }
   \item{best.fit}{The optimal model chosen by the minimum BIC as an \code{splmm} object. }

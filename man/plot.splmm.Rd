@@ -10,6 +10,9 @@
   \item{x}{a \code{'splmm.tuning'} object}
   \item{\dots}{not used}
 }
+\value{
+A line plot of BIC, AIC, BICC, EBIC values against lam1 or lam2 depending on the inout. 
+}
 
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

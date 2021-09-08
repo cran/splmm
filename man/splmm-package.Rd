@@ -32,12 +32,13 @@ Luoying Yang PhD thesis
 
 data(cognitive)
 
-x <- model.matrix(ravens ~ schoolid+treatment+relyear+sex+age_at_time0+height+weight+head_circ+ses1
-      +readtest+writetest+yrsofsch, cognitive)
-z <- model.matrix(ravens ~ schoolid+treatment+relyear, cognitive)
+x <- model.matrix(ravens ~schoolid+treatment+year+sex+age_at_time0
+                  +height+weight+head_circ+ses+mom_read+mom_write
+                  +mom_edu, cognitive)
+z <- x
 
-fit <- splmm(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=0.01,
-lam2=0.01,penalty.b="scad", penalty.L="scad")
+fit <- splmm(x=x,y=cognitive$ravens,z=z,grp=cognitive$id,lam1=0.1,
+lam2=0.1,penalty.b="lasso", penalty.L="lasso")
 summary(fit)
 }
 

@@ -64,7 +64,7 @@ All the details of the algorithm can be found in the manuscript.
   of the set of nonzero \code{coefficients} plus the number of nonzero variance in \code{D}}
   \item{aic}{AIC}
   \item{bic}{BIC}
-  \item{bbic}{Modified BIC defined by Wang et al (2009)}
+  \item{bicc}{Modified BIC defined by Wang et al (2009)}
   \item{ebic}{Extended BIC defined by Chen and Chen (2008)}
   \item{converged}{Does the algorithm converge? 0: correct convergence ;
   an odd number means that maxIter was reached ; an even number means
@@ -82,6 +82,17 @@ All the details of the algorithm can be found in the manuscript.
 
 }
 \examples{
+
+### Use splmm for a toy dataset.
+
+data(simulated_data)
+
+set.seed(144)
+fit = splmm(x=simulated_data$x,y=simulated_data$y,
+z=simulated_data$z,grp=simulated_data$grp,
+lam1=0.1,lam2=0.01, penalty.b="scad", penalty.L="scad")
+summary(fit)
+
 \donttest{
 
 ## Use splmm on the Kenya school cognitive data set

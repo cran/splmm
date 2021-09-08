@@ -30,6 +30,11 @@
     parameters used in "optimize". See help("optimize")}
   \item{thres}{If a variance or covariance parameter has smaller absolute value than thres, the parameter is set to exactly zero.}
 }
+
+\value{
+Exactly the same as \code{arguments}.
+}
+
 \details{For the Armijo step parameters, see Bertsekas (2003)}
 
 
