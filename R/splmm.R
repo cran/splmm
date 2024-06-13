@@ -12,6 +12,8 @@
 #' 
 #' @import penalized
 #' 
+#' @import progress
+#' 
 #' @param x
 #'
 #' @param y
@@ -110,6 +112,7 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   
   lambda1 = lam1*N
   lambda2 = lam2*N
+  
   ###### save the grouped information as components of a list
   yGrp <- split(y,grp)
   xGrp <- split.data.frame(x,grp)
@@ -118,7 +121,6 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   
   
   ##### Initiation
-  
   ###### beta
   init <- optL1(y,x[,-1],model="linear",fold=10,trace=FALSE)
   betaStart <- c(init$fullfit@unpenalized,init$fullfit@penalized)
@@ -165,13 +167,16 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   counterIn <- 0
   counter <- 0       # counts the number of outer iterations
   
+
+  
+  pb <- progress::progress_bar$new(format = "[:bar] :current iterations in :elapsedfull (:percent of :total maxIter)",
+                         width = 100, total = control$maxIter)
+  pb$tick(0)
+  pb$message("Performing coordinate gradient descent...")
   
   while ((counter<control$maxIter)&((convPar>control$tol|convFct>control$tol|convCov>control$tol|!doAll ))) {
     
-    
     counter <- counter + 1 
-    
-    
     
     betaIterOld <- betaIter
     LIterOld <- LIter
@@ -185,13 +190,11 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
     activeSet <- which(betaIter!=0)
     if ((length(activeSet)>min(p,ntot))&(lambda1>0)&(counter>2)) {stopped <- TRUE ; break}
     
-    if (counterIn==0 | counterIn>control$number)
-    {
+    if (counterIn==0 | counterIn>control$number){
       doAll <- TRUE
       activeSet <- 1:p
       counterIn <- 1    
-    } else
-    {
+    } else {
       doAll <- FALSE
       counterIn <- counterIn+1
     }
@@ -204,15 +207,15 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
     
     ll2 <- nlogdet(LGroup=VInvGrp)
     
-    for (j in activeSet)
-    {
+    
+    for (j in activeSet){
       cut1 <- as2(x=x,y=y,b=betaIter,j=j,activeSet=activeSet,group=grp,sGroup=LxGrp)
       JinNonpen <- j%in%nonpen.b
       
       # optimum can be calculated analytically
-      if (HessIterTrunc[j]==HessIter[j])
-      {
-        if (JinNonpen) {betaIter[j] <- cut1/HessIter[j]} else {
+      if (HessIterTrunc[j]==HessIter[j]){
+        if (JinNonpen) {betaIter[j] <- cut1/HessIter[j]
+        } else {
           if(penalty.b=="scad"){
             scada = 3.7
             betaIter[j] <- SoftThreshold(cut1,lambda1)/(HessIter[j]*(1-1/scada))
@@ -222,14 +225,10 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
           }
           
         }
-      }else
-        
-        # optimimum is determined by the armijo rule
-      {
+      } else { # optimimum is determined by the armijo rule
         armijo <- ArmijoRule_b(xGroup=xGrp,yGroup=yGrp,LGroup=VInvGrp,b=betaIter,j=j,cut=cut1,HkOldJ=HessIterTrunc[j],
                                    HkJ=HessIter[j],JinNonpen=JinNonpen,lambda=lambda1,nonpen=nonpen.b,penalty=penalty.b,
                                    ll1=ll1,ll2=ll2,converged=converged,control=control)
-        
         
         betaIter <- armijo$b
         converged <- armijo$converged
@@ -237,7 +236,6 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
       }
       
     } 
-    
     
     # --- optimization w.r.t the variance components parameters ---
     # -------------------------------------------------------------
@@ -248,11 +246,9 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
     ll4 <- lambda1*sum(abs(betaIter[-nonpen.b]))
     
     # optimization of L
-    
     activeSet.L = which(rowSums(abs(LIter))!=0)
     
     # calculate the hessian matrices for k in the activeSet
-    
     D.grad = D_Gradient(xGroup=xGrp,zGroup=zGrp,LGroup=VInvGrp,yGroup=yGrp,b=betaIter,N=N,q=q)
     L.grad = t(LIter%*%(D.grad+t(D.grad)))
     
@@ -260,14 +256,12 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
     D.hessian.submatrix = matsplitter(D.hessian,q)
     
     for (k in 1:q) {
-      
       #L.hessian.sub = sapply(D.hessian.submatrix[k,],function(x) x[,k])
       L.hessian.sub = sapply(D.hessian.submatrix[((k-1)*q+1):(k*q)],function(x) x[,k])
       #L.hessian = diag(2*D.grad[k,k],q,q)+2*LIter%*%(matrix(unlist(D.hessian.submatrix[k,k]),ncol = q,byrow = TRUE)+L.hessian.sub)%*%t(LIter)
       L.hessian = diag(2*D.grad[k,k],q,q)+2*LIter%*%(matrix(unlist(D.hessian.submatrix[[(k-1)*q+k]]),ncol = q,byrow = TRUE)+L.hessian.sub)%*%t(LIter)
       
       for (l in intersect(k:q,activeSet.L)) {
-        
         L.lk.grad <- L.grad[l,k]
         L.lk.Hess <- L.hessian[l,l]
         L.lk.Hess <- min(max(L.lk.Hess,control$lower),control$upper)
@@ -287,10 +281,7 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
         fctIter <- armijo$fct
         
       }
-      
-      
     }
-    
     LIter[LIter < 1e-4] <- 0
     
     DIter = LIter%*%t(LIter)
@@ -313,10 +304,13 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
     
     if ((convPar <= control$tol) & (convFct <= control$tol) & (convCov <= control$tol)) counterIn <- 0
     
+    pb$tick()
   }
   
-  if (standardize)
-  {
+  message(paste("\nUsed", counter, "iterations out of maximum", control$maxIter, "allowed."))
+  message("Predicting random effects and finalizing calculations...")
+  
+  if (standardize){
     betaIter[-1] <- betaIter[-1]/sdx
     betaIter[1] <- betaIter[1] - sum(meanx*betaIter[-1])
     
@@ -336,8 +330,7 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   
   cholD <- t(triang(LvecIter,q))
   
-  for (i in 1:N)
-  {
+  for (i in 1:N){
     u[[i]] <- sigmaIter*solve(t(zGrp[[i]]%*%cholD)%*%zGrp[[i]]%*%cholD+sigmaIter^2*diag(q),tol = 1e-40)%*%t(zGrp[[i]]%*%cholD)%*%resGrp[[i]]
     biGroup[[i]] <- 1/sigmaIter*cholD%*%u[[i]]
   }
@@ -348,8 +341,7 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   
   # fitted values and residuals
   residGrp <- fittedGrp <- list() ; length(residGrp) <- length(fittedGrp) <- N
-  for (i in 1:N)
-  {
+  for (i in 1:N){
     fittedGrp[[i]] <- xGrp[[i]][,activeSet,drop=FALSE]%*%betaIter[activeSet,drop=FALSE] + zGrp[[i]]%*%biGroup[[i]]
     residGrp[[i]] <- yGrp[[i]]-fittedGrp[[i]]
   }
@@ -395,6 +387,5 @@ splmm.default <- function(x,y,z,grp,lam1,lam2,nonpen.b=1,nonpen.L=1,penalty.b=c(
   
   out
   structure(out,class="splmm")
-  
   
 }

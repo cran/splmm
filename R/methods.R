@@ -11,7 +11,12 @@ summary.splmm <- function(object,...)
     # 1. part
     table1 <- round(c(object$aic,object$bic,object$bicc,object$ebic,object$logLik,object$deviance,object$objective),1)
     names(table1) <- c("AIC","BIC","BICC","EBIC","logLik","deviance","objective")
-    cat("Model fitted by",object$method,"for","lambda1 =",round(object$lambda1,3),",lambda2 =",round(object$lambda2,3),":\n")
+    if(is.null(object$method)){
+      cat("Model fit by splmm for lambda1 =",object$call$lam1,", lambda2 =",object$call$lam2,":\n")  
+    } else{
+      cat("Model fit by", object$method, "for lambda1 =",object$call$lam1, ", lambda2 =", object$call$lam2, ":\n")
+    }
+    
     print(table1)
     
     # 2. part
@@ -96,7 +101,7 @@ utils::globalVariables(c("lambda1", "Value", "Criteria","lambda2"))
 plot.splmm <- function(x,...){
   
   # check if the object is splmm.tuning
-  if(class(x)!="splmm.tuning") stop("input is not splmm.tuning object.")
+  if(!is(x, "splmm.tuning")) stop("input is not splmm.tuning object.")
   
   if(x$lam1.tuning&!x$lam2.tuning){
     BIC = cbind.data.frame(x$lam1.seq,rep("BIC",length(x$BIC.lam1)),x$BIC.lam1)
@@ -178,7 +183,7 @@ plot.splmm <- function(x,...){
 
 plot3D.splmm <- function(x,criteria=c("BIC","AIC","BICC","EBIC"),type=c("line","surface"),...){
   # check if the object is splmm.tuning
-  if(class(x)!="splmm.tuning") stop("input is not splmm.tuning object.")
+  if(!is(x, "splmm.tuning")) stop("input is not splmm.tuning object.")
   if(!x$lam1.tuning|!x$lam2.tuning) stop("input needs to be splmm.tuning object for both lam1 and lam2.")
   
   criteria <- match.arg(criteria)
